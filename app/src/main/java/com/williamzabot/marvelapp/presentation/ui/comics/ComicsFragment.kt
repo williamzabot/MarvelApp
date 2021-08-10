@@ -36,12 +36,14 @@ class ComicsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initView()
         observeEvents()
-        viewModel.getComics(1)
+        if (comicAdapter.comicsList.isEmpty()) {
+            viewModel.getComics(1)
+        }
     }
 
     private fun observeEvents() {
-        viewModel.viewState.observe(viewLifecycleOwner){
-            when(it){
+        viewModel.viewState.observe(viewLifecycleOwner) {
+            when (it) {
                 is ComicsViewModel.ViewState.Running -> {
                     binding.progressBarHome.visibility = View.GONE
                 }
