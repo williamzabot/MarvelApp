@@ -30,6 +30,11 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
+
+    }
+
+    private fun initView() {
         activity?.findViewById<Toolbar>(R.id.toolbar_home)?.visibility = View.GONE
 
         binding.apply {
@@ -56,7 +61,6 @@ class DetailFragment : Fragment() {
                 navController.navigate(DetailFragmentDirections.detailToFull(args.comic))
             }
         }
-
     }
 
 

@@ -1,7 +1,23 @@
 package com.williamzabot.marvelapp.presentation
 
 import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
+import com.williamzabot.marvelapp.data.di.dataModule
+import com.williamzabot.marvelapp.domain.di.domainModule
+import com.williamzabot.marvelapp.presentation.di.presentationModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
-@HiltAndroidApp
-class Application : Application() 
+class Application: Application() {
+
+    override fun onCreate(){
+        super.onCreate()
+        startKoin {
+            androidContext(this@Application)
+            modules(
+                domainModule,
+                dataModule,
+                presentationModule
+            )
+        }
+    }
+}

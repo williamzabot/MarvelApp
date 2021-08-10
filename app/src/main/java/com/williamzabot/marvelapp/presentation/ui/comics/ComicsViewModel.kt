@@ -1,24 +1,43 @@
 package com.williamzabot.marvelapp.presentation.ui.comics
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
-import androidx.paging.liveData
-import com.williamzabot.marvelapp.domain.usecases.comics.ComicUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import com.williamzabot.marvelapp.domain.usecases.ComicUseCase
+import com.williamzabot.marvelapp.presentation.model.Comic
+import kotlinx.coroutines.launch
+import com.williamzabot.marvelapp.domain.utils.Result
 
-@HiltViewModel
-class ComicsViewModel @Inject constructor(private val comicUseCase: ComicUseCase): ViewModel() {
+class ComicsViewModel(private val comicUseCase: ComicUseCase) : ViewModel() {
 
-    val comics = Pager(
-        config = PagingConfig(
-            pageSize = 10,
-            enablePlaceholders = false
-        ),
-        pagingSourceFactory = { ComicsPagingSource(comicUseCase) }
-    ).liveData.cachedIn(viewModelScope)
+    private val _viewState = MutableLiveData<ViewState>(ViewState.Running)
+    val viewState: LiveData<ViewState> get() = _viewState
+
+    private val _comics = MutableLiveData<List<Comic>>()
+    val comics: LiveData<List<Comic>> get() = _comics
+
+    fun getComics(offset: Int) {
+        _viewState.postValue(ViewState.Loading)
+        viewModelScope.launch {
+            when (val result = comicUseCase.execute(offset)) {
+                is Result.Success -> {
+                    _comics.postValue(result.data.filter { it.image != null })
+                    _viewState.postValue(ViewState.Running)
+                }
+                is Result.Failure -> {
+                    _viewState.postValue(ViewState.Error)
+                }
+            }
+        }
+    }
+
+
+    sealed class ViewState {
+        object Running : ViewState()
+        object Loading : ViewState()
+        object Error : ViewState()
+    }
+
 
 }

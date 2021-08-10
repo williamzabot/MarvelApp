@@ -1,20 +1,20 @@
 package com.williamzabot.marvelapp.data.di
 
+import com.williamzabot.marvelapp.data.RetrofitClient.createWebService
+import com.williamzabot.marvelapp.data.api.ComicsApi
 import com.williamzabot.marvelapp.data.repositories.ComicRepositoryImpl
 import com.williamzabot.marvelapp.domain.repositories.ComicRepository
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class DataModule {
+val dataModule = module {
 
-    @Singleton
-    @Binds
-    abstract fun injectComicRepository(
-        comicRepositoryImpl: ComicRepositoryImpl
-    ): ComicRepository
+    single {
+        createWebService<ComicsApi>()
+    }
+
+    factory<ComicRepository> {
+        ComicRepositoryImpl(
+            comicsApi = get()
+        )
+    }
 }

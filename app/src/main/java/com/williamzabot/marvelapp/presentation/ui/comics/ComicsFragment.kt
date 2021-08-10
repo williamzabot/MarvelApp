@@ -4,22 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
 import com.williamzabot.marvelapp.R
 import com.williamzabot.marvelapp.databinding.FragmentComicsBinding
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class ComicsFragment : Fragment() {
 
     private var _binding: FragmentComicsBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by viewModels<ComicsViewModel>()
+    private val viewModel by viewModel<ComicsViewModel>()
     private val comicAdapter by lazy {
         ComicsAdapter { comic ->
             findNavController().navigate(ComicsFragmentDirections.comicToDetail(comic))
@@ -38,20 +35,33 @@ class ComicsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        observeEvents()
+        viewModel.getComics(1)
+    }
+
+    private fun observeEvents() {
+        viewModel.viewState.observe(viewLifecycleOwner){
+            when(it){
+                is ComicsViewModel.ViewState.Running -> {
+                    binding.progressBarHome.visibility = View.GONE
+                }
+                is ComicsViewModel.ViewState.Loading -> {
+                    binding.progressBarHome.visibility = View.VISIBLE
+                }
+                is ComicsViewModel.ViewState.Error -> {
+                    binding.progressBarHome.visibility = View.GONE
+                    Toast.makeText(requireContext(), "Erro requisição", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
         viewModel.comics.observe(viewLifecycleOwner) {
-            comicAdapter.submitData(lifecycle, it)
+            comicAdapter.comicsList = it
         }
     }
 
     private fun initView() {
         activity?.findViewById<Toolbar>(R.id.toolbar_home)?.visibility = View.VISIBLE
-        binding.apply {
-            comicAdapter.run {
-                recyclerViewComics.adapter = withLoadStateFooter(LoadStateAdapter())
-                addLoadStateListener { state ->
-                    progressBarHome.isVisible = state.refresh is LoadState.Loading
-                }
-            }
-        }
+        binding.recyclerViewComics.adapter = comicAdapter
     }
 }
