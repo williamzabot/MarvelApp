@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.williamzabot.marvelapp.R
 import com.williamzabot.marvelapp.databinding.FragmentComicsBinding
 
@@ -62,7 +63,7 @@ class ComicsFragment : Fragment() {
         }
 
         viewModel.unauthorized.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "Não autorizado", Toast.LENGTH_LONG).show()
+            Snackbar.make(binding.constraintLayout, "Não autorizado", Snackbar.LENGTH_LONG).show()
         }
     }
 
