@@ -7,17 +7,19 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.williamzabot.marvelapp.R
 import com.williamzabot.marvelapp.databinding.FragmentDetailBinding
 import com.williamzabot.marvelapp.presentation.extensions.url
+import com.williamzabot.marvelapp.presentation.ui.comics.ComicsActivityViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class DetailFragment : Fragment() {
 
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
-    private val args by navArgs<DetailFragmentArgs>()
     private val navController by lazy { findNavController() }
+    private val viewModel by sharedViewModel<ComicsActivityViewModel>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,21 +38,21 @@ class DetailFragment : Fragment() {
 
     private fun initView() {
         activity?.findViewById<Toolbar>(R.id.toolbar_home)?.visibility = View.GONE
-
+        val comic = viewModel.ultimoComicClicado
         binding.apply {
-            args.comic.thumbnail?.let {
+            comic?.thumbnail?.let {
                 bannerDetail.url(it)
             }
-            if (args.comic.price != null) {
-                priceDetail.text = args.comic.price.toString()
+            if (comic?.price != null) {
+                priceDetail.text = comic.price.toString()
             } else {
                 titlePrice.visibility = View.GONE
             }
-            titleDetail.text = args.comic.title
-            args.comic.image?.let { url ->
+            titleDetail.text = comic?.title
+            comic?.image?.let { url ->
                 imageViewDetail.url(url)
             }
-            args.comic.description?.let {
+            comic?.description?.let {
                 descriptionDetail.text = it
             }
             iconBack.setOnClickListener {
@@ -58,7 +60,7 @@ class DetailFragment : Fragment() {
             }
 
             constraintImageDetail.setOnClickListener {
-                navController.navigate(DetailFragmentDirections.detailToFull(args.comic))
+                navController.navigate(DetailFragmentDirections.detailToFull(comic!!))
             }
         }
     }
