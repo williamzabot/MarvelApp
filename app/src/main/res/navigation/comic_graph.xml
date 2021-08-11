@@ -44,7 +44,8 @@
 
         <argument
             android:name="comic"
-            app:argType="com.williamzabot.marvelapp.domain.model.Comic" />
+            app:argType="com.williamzabot.marvelapp.domain.model.Comic"
+        />
 
         <action
             android:id="@+id/back_to_detail"

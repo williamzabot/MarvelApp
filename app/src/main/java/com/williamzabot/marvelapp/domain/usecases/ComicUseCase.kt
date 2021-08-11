@@ -12,7 +12,7 @@ class ComicUseCase(private val comicRepository: ComicRepository) {
             is Result.Success -> Result.Success(result.data.data.comics.map {
                 it.toComic()
             })
-            is Result.Failure -> Result.Failure(Exception())
+            is Result.Failure -> Result.Failure(result.exception)
         }
     }
 }

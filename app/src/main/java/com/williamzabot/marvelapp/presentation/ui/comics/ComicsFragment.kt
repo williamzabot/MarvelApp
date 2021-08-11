@@ -70,4 +70,9 @@ class ComicsFragment : Fragment() {
         activity?.findViewById<Toolbar>(R.id.toolbar_home)?.visibility = View.VISIBLE
         binding.recyclerViewComics.adapter = comicAdapter
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }
