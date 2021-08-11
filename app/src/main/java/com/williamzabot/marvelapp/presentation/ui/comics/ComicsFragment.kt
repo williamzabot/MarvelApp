@@ -60,6 +60,10 @@ class ComicsFragment : Fragment() {
         viewModel.comics.observe(viewLifecycleOwner) {
             comicAdapter.comicsList = it
         }
+
+        viewModel.unauthorized.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), "Não autorizado", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun initView() {

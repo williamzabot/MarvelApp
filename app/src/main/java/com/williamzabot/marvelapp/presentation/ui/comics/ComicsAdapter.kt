@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.williamzabot.marvelapp.databinding.ItemComicBinding
-import com.williamzabot.marvelapp.presentation.model.Comic
+import com.williamzabot.marvelapp.domain.model.Comic
 
 class ComicsAdapter(private val clickComic: (comic: Comic) -> Unit) :
     RecyclerView.Adapter<ComicsViewHolder>() {

@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.williamzabot.marvelapp.domain.exceptions.UnauthorizedException
 import com.williamzabot.marvelapp.domain.usecases.ComicUseCase
-import com.williamzabot.marvelapp.presentation.model.Comic
+import com.williamzabot.marvelapp.domain.model.Comic
 import kotlinx.coroutines.launch
 import com.williamzabot.marvelapp.domain.utils.Result
 
@@ -17,6 +18,9 @@ class ComicsViewModel(private val comicUseCase: ComicUseCase) : ViewModel() {
     private val _comics = MutableLiveData<List<Comic>>()
     val comics: LiveData<List<Comic>> get() = _comics
 
+    private val _unauthorized = MutableLiveData<Boolean>()
+    val unauthorized: LiveData<Boolean> get() = _unauthorized
+
     fun getComics(offset: Int) {
         _viewState.postValue(ViewState.Loading)
         viewModelScope.launch {
@@ -26,6 +30,9 @@ class ComicsViewModel(private val comicUseCase: ComicUseCase) : ViewModel() {
                     _viewState.postValue(ViewState.Running)
                 }
                 is Result.Failure -> {
+                    if (result.exception is UnauthorizedException) {
+                        _unauthorized.postValue(true)
+                    }
                     _viewState.postValue(ViewState.Error)
                 }
             }

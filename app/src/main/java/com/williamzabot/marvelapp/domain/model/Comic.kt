@@ -1,4 +1,4 @@
-package com.williamzabot.marvelapp.presentation.model
+package com.williamzabot.marvelapp.domain.model
 
 import java.io.Serializable
 

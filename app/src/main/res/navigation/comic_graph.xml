@@ -26,7 +26,7 @@
 
         <argument
             android:name="comic"
-            app:argType="com.williamzabot.marvelapp.presentation.model.Comic" />
+            app:argType="com.williamzabot.marvelapp.domain.model.Comic" />
 
         <action
             android:id="@+id/detail_to_full"
@@ -44,7 +44,7 @@
 
         <argument
             android:name="comic"
-            app:argType="com.williamzabot.marvelapp.presentation.model.Comic" />
+            app:argType="com.williamzabot.marvelapp.domain.model.Comic" />
 
         <action
             android:id="@+id/back_to_detail"

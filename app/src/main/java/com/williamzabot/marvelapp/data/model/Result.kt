@@ -1,6 +1,6 @@
 package com.williamzabot.marvelapp.data.model
 
-import com.williamzabot.marvelapp.presentation.model.Comic
+import com.williamzabot.marvelapp.domain.model.Comic
 
 data class Result(
     val characters: Characters,

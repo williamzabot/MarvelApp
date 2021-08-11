@@ -3,7 +3,7 @@ package com.williamzabot.marvelapp.presentation.ui.comics
 import androidx.recyclerview.widget.RecyclerView
 import com.williamzabot.marvelapp.databinding.ItemComicBinding
 import com.williamzabot.marvelapp.presentation.extensions.url
-import com.williamzabot.marvelapp.presentation.model.Comic
+import com.williamzabot.marvelapp.domain.model.Comic
 
 class ComicsViewHolder(private val binding: ItemComicBinding) :
     RecyclerView.ViewHolder(binding.root) {
